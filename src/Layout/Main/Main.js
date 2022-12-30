@@ -8,15 +8,15 @@ const Main = () => {
         <div>
             <Navbar className=''></Navbar>
             <div className='lg:grid grid-cols-6'>
-                <div className='h-screen'>
+                <div className='lg:block hidden'>
                     <Leftsidebar></Leftsidebar>
                 </div>
-                <div className='px-3 col-span-4 h-screen'>
+                <div className='px-3 col-span-4 '>
                     <Outlet>
 
                     </Outlet>
                 </div>
-                <div className=''>
+                <div className='lg:block hidden'>
                     <Leftsidebar></Leftsidebar>
                 </div>
             </div>

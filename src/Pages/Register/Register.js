@@ -1,13 +1,16 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { getImageUrl } from '../../Api/ImageUpload/ImageUpload';
 import { AuthContext } from '../../context/AuthProvider/AuthProvider';
 import { GoogleAuthProvider } from 'firebase/auth';
+import { setAuthToken } from '../../Api/Auth/Auth';
+import { fromJSON } from 'postcss';
 
 const Register = () => {
    const {providerLogin,createUser,updateUserProfile}=useContext(AuthContext)
    const googleProvider=new GoogleAuthProvider()
+   const navigate=useNavigate()
     
    const handlesubmit=(e)=>{
     e.preventDefault();
@@ -25,18 +28,25 @@ const Register = () => {
       const userRegistrationinfo={
         name,
         email,
-        password,
         image:imgData.data.url,
         universityName,
         adress
     }
-        console.log(imgData.data.url)
+        // console.log(imgData.data.url)
+        // console.log("user registration info : ",userRegistrationinfo)
+
         createUser(email,password)
         .then(result=>{
+
           const user=result.user;
+
+          setAuthToken(userRegistrationinfo);
           updateUserProfile(name,imgData.data.url)
         .then(() => {})
-       .catch((error) => console.error(error));
+        .catch((error) => console.error(error));
+        form.reset()
+        navigate('/')
+
         })
         .catch(err=>{
           console.log(err)
