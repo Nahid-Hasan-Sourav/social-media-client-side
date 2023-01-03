@@ -31,7 +31,7 @@ export const setAuthToken = (user) => {
     .then((res) => res.json())
     .then((data) => {
       console.log("This is from auth.js function", data);
-      toast.success("Registration complete successfully")
+      
       // if(data.message==='Forbidden access' || data.message==='unauthorized access'){
       //     logOut();
       // }

@@ -3,6 +3,7 @@ import Main from "../../Layout/Main/Main";
 import Home from "../../Pages/Home/Home";
 import Login from "../../Pages/Login/Login";
 import Register from "../../Pages/Register/Register";
+import PrivaterRourte from "../PrivateRoute/PrivaterRourte";
 
 
 export const routes=createBrowserRouter([
@@ -12,11 +13,11 @@ export const routes=createBrowserRouter([
         children:[
             {
                 path:'/',
-                element:<Home></Home>
+                element:<PrivaterRourte><Home></Home></PrivaterRourte>
             },
             {
                 path:'/home',
-                element:<Home></Home>
+                element:<PrivaterRourte><Home></Home></PrivaterRourte>
             },
             {
                 path:'/register',

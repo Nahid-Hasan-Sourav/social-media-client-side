@@ -68,23 +68,29 @@ const Navbar = () => {
                 tabIndex={0}
                 className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
               >
-              {
-                menuItem
-              }
+                {menuItem}
               </ul>
             </div>
             <Link className="btn btn-ghost normal-case text-xl">
-            people<span className='text-blue-500'>Connect</span>
+              people<span className="text-blue-500">Connect</span>
             </Link>
           </div>
           <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1">
-              {menuItem}
-            </ul>
+            <ul className="menu menu-horizontal px-1">{menuItem}</ul>
           </div>
-          {/* <div className="navbar-end">
-            <a className="btn">Get started</a>
-          </div> */}
+          {user?.photoURL ? (
+            <>
+            <div className="avatar online">
+              <div className="avatar justify-center">
+                <div className="w-10 rounded-full">
+                  <img src={user?.photoURL} />
+                </div>
+              </div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     );

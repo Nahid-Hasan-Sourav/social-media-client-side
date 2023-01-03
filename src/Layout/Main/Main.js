@@ -11,7 +11,7 @@ const Main = () => {
                 <div className='lg:block hidden'>
                     <Leftsidebar></Leftsidebar>
                 </div>
-                <div className='px-3 col-span-4 '>
+                <div className='px-3 col-span-4 bg-[#F0F2F5]'>
                     <Outlet>
 
                     </Outlet>

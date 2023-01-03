@@ -1,16 +1,21 @@
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import { getImageUrl } from '../../Api/ImageUpload/ImageUpload';
 import { AuthContext } from '../../context/AuthProvider/AuthProvider';
 import { GoogleAuthProvider } from 'firebase/auth';
 import { setAuthToken } from '../../Api/Auth/Auth';
 import { fromJSON } from 'postcss';
+import { toast } from 'react-hot-toast';
 
 const Register = () => {
    const {providerLogin,createUser,updateUserProfile}=useContext(AuthContext)
    const googleProvider=new GoogleAuthProvider()
+
    const navigate=useNavigate()
+   const location=useLocation()
+
+   const from=location.state?.from.pathname || '/'
     
    const handlesubmit=(e)=>{
     e.preventDefault();
@@ -21,6 +26,7 @@ const Register = () => {
     let image=form.image.files[0];
     let universityName=form.universityName.value;
     let adress=form.adress.value;
+    // console.log("registerImage",image)
 
    
     getImageUrl(image)
@@ -40,12 +46,13 @@ const Register = () => {
 
           const user=result.user;
 
-          setAuthToken(userRegistrationinfo);
-          updateUserProfile(name,imgData.data.url)
+        setAuthToken(userRegistrationinfo);
+        toast.success("Registration complete successfully")
+        updateUserProfile(name,imgData.data.url)
         .then(() => {})
         .catch((error) => console.error(error));
         form.reset()
-        navigate('/')
+        navigate(from,{replace:true});
 
         })
         .catch(err=>{
@@ -59,7 +66,18 @@ const Register = () => {
       providerLogin(googleProvider)
       .then((result)=>{
         const user=result.user;
-        console.log("User",user)
+        console.log("Google User",user);
+        const gooleSigninUserInfo={
+        name:user.displayName,
+        email:user.email,
+        image:user.photoURL,
+        universityName:"N/A",
+        adress:"N/A"
+        }
+        console.log("Google user Info",gooleSigninUserInfo)
+        setAuthToken(gooleSigninUserInfo)
+        toast.success("successfully signIn by GOOGLE")
+        navigate(from,{replace:true});
       })
       .catch(err=>{
         console.log("This is an error",err);
@@ -84,13 +102,13 @@ const Register = () => {
       >
             <FcGoogle />
             </span>
-			<span class="w-11 h-11 items-center justify-center inline-flex rounded-full font-bold text-lg  text-white bg-gray-400 hover:shadow-lg cursor-pointer transition ease-in duration-300">
+			{/* <span class="w-11 h-11 items-center justify-center inline-flex rounded-full font-bold text-lg  text-white bg-gray-400 hover:shadow-lg cursor-pointer transition ease-in duration-300">
             <FcGoogle />
             </span>
 
 			<span class="w-11 h-11 items-center justify-center inline-flex rounded-full font-bold text-lg  text-white bg-blue-500 hover:shadow-lg cursor-pointer transition ease-in duration-300">
             <FcGoogle />
-            </span>
+            </span> */}
 		</div>
 
         <div className="divider my-5 ">OR</div>

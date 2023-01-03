@@ -2,7 +2,7 @@ import React from 'react';
 
 const Leftsidebar = () => {
     return (
-        <div className=' list-none flex-col text-left bg-[#9eccad] h-screen text-center'>
+        <div className=' list-none flex-col text-left bg-[#9eccad] h-full text-center'>
             <li>
                 Home
             </li>

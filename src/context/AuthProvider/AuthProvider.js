@@ -10,6 +10,7 @@ const auth=getAuth(app)
 const AuthProvider = ({children}) => {
     const [productAvailable, setproductAvailable]=useState('Available');
     const [user,setUser]=useState(null);
+    const [postImg,setPostImg]=useState("");
     // const [error,setError]=useState('')
     const [loading, setLoading] = useState(true);
 
@@ -63,8 +64,12 @@ const AuthProvider = ({children}) => {
         createUser,
         providerLogin,
         logOut,
+        loading,
+        setLoading,
         signIn,
-        updateUserProfile
+        updateUserProfile,
+        postImg,
+        setPostImg
     }
 
 

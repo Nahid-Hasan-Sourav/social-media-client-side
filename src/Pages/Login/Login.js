@@ -1,11 +1,16 @@
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext } from 'react';
+import { toast } from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { setAuthToken } from '../../Api/Auth/Auth';
 import { AuthContext } from '../../context/AuthProvider/AuthProvider';
 
 const Login = () => {
-    const {signIn}=useContext(AuthContext)
-    const location=useLocation()
-    const navigate=useNavigate()
+    const {signIn,providerLogin}=useContext(AuthContext)
+     const navigate=useNavigate()
+     const location=useLocation()
+     const googleProvider=new GoogleAuthProvider()
+   
     const from=location.state?.from?.pathname || '/';
     const handlesubmit=(e)=>{
         e.preventDefault();
@@ -18,6 +23,8 @@ const Login = () => {
         signIn(email,password)
         .then((result) => {
             const user=result.user;
+            
+            
             form.reset()
             navigate(from,{replace:true})
 
@@ -26,97 +33,121 @@ const Login = () => {
        
 
     }
+
+    const handleGoogle =()=>{
+      providerLogin(googleProvider)
+      .then((result)=>{
+        const user=result.user;
+        console.log("Google User",user);
+        const gooleSigninUserInfo={
+        name:user.displayName,
+        email:user.email,
+        image:user.photoURL,
+        universityName:"N/A",
+        adress:"N/A"
+        }
+        console.log("Google user Info",gooleSigninUserInfo)
+        setAuthToken(gooleSigninUserInfo)
+        toast.success("successfully signIn by GOOGLE")
+        navigate(from,{replace:true});
+      })
+      .catch(err=>{
+        console.log("This is an error",err);
+      })}
+
     return (
-        <div className="h-screen">
+
+      <div className="h-screen">
             
-        <div className="container px-6 py-12 h-full">
-          <div className="flex justify-center items-center flex-wrap h-full g-6 text-gray-800">
-            <div className="md:w-8/12 lg:w-6/12 mb-12 md:mb-0">
-              <img
-                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
-                className="w-full"
-                alt="Phone image"
-              />
-            </div>
-            <div className="md:w-8/12 lg:w-5/12 lg:ml-20">
-              <form onSubmit={handlesubmit}>
-               
-                <div className="mb-6">
+      <div className="container px-6 py-12 h-full">
+        <div className="flex justify-center items-center flex-wrap h-full g-6 text-gray-800">
+          <div className="md:w-8/12 lg:w-6/12 mb-12 md:mb-0">
+            <img
+              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+              className="w-full"
+              alt="Phone"
+            />
+          </div>
+          <div className="md:w-8/12 lg:w-5/12 lg:ml-20">
+            <form onSubmit={handlesubmit}>
+             
+              <div className="mb-6">
+                <input
+                  type="text"
+                  name='email'
+                  className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  placeholder="Email address"
+                />
+              </div>
+    
+             
+              <div className="mb-6">
+                <input
+                  type="password"
+                  name='password'
+                  className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  placeholder="Password"
+                />
+              </div>
+    
+              <div className="flex justify-between items-center mb-6">
+                <div className="form-group form-check">
                   <input
-                    type="text"
-                    name='email'
-                    className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    placeholder="Email address"
+                    type="checkbox"
+                    className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
+                    id="exampleCheck3"
+                    checked
                   />
-                </div>
-      
-               
-                <div className="mb-6">
-                  <input
-                    type="password"
-                    name='password'
-                    className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    placeholder="Password"
-                  />
-                </div>
-      
-                <div className="flex justify-between items-center mb-6">
-                  <div className="form-group form-check">
-                    <input
-                      type="checkbox"
-                      className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                      id="exampleCheck3"
-                      checked
-                    />
-                    <label className="form-check-label inline-block text-gray-800" for="exampleCheck2"
-                      >Remember me</label
-                    >
-                  </div>
-                  <a
-                    href="#!"
-                    className="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
-                    >Forgot password?</a
+                  <label className="form-check-label inline-block text-gray-800" for="exampleCheck2"
+                    >Remember me</label
                   >
                 </div>
-      
-               
-                <button
-                  type="submit"
-                  className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
-                  data-mdb-ripple="true"
-                  data-mdb-ripple-color="light"
+                <a
+                  href="#!"
+                  className="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
+                  >Forgot password?</a
                 >
-                  Sign in
-                </button>
-      
-                <div
-                  className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5"
-                >
-                  <p className="text-center font-semibold mx-4 mb-0">OR</p>
-                </div>
-      
-                <Link
-                  className="px-7 py-3 text-gray-600 font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3"
-                 
-                 
-                  
-                >
-                 
-                  Continue with Google
-                </Link>
-                <p className="text-sm font-semibold mt-2 pt-1 mb-0">
-              Don't have an account?
+              </div>
+    
+             
+              <button
+                type="submit"
+                className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+                data-mdb-ripple="true"
+                data-mdb-ripple-color="light"
+              >
+                Sign in
+              </button>
+    
+              <div
+                className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5"
+              >
+                <p className="text-center font-semibold mx-4 mb-0">OR</p>
+              </div>
+    
               <Link
-               to='/register'
-                className="text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out"
-                >Register</Link>
-            </p>
-              </form>
-            </div>
+                className="px-7 py-3 text-gray-600 font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3"
+               
+               onClick={handleGoogle}
+                
+              >
+               
+                Continue with Google
+              </Link>
+              <p className="text-sm font-semibold mt-2 pt-1 mb-0">
+            Don't have an account?
+            <Link
+             to='/register'
+              className="text-red-600 hover:text-red-700 focus:text-red-700 transition duration-200 ease-in-out"
+              >Register</Link>
+          </p>
+            </form>
           </div>
         </div>
-      
-              </div>
+      </div>
+    
+      </div>
+       
     );
 };
 
